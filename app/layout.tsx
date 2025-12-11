@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
 import { TaskProvider } from "./providers/TaskProvider";
 import { AnalyticsProvider } from "./providers/AnalyticsProvider";
-import { Bruno_Ace_SC, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import { PostHogProvider } from "./providers/PosthogProvider";
 
 export const metadata = {
@@ -32,12 +32,6 @@ export const metadata = {
   // },
 };
 
-const redHat = Bruno_Ace_SC({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-logo",
-});
-
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -54,7 +48,6 @@ export default function RootLayout({
       <body
         className={cn(
           GeistSans.className,
-          redHat.variable,
           inter.variable,
           "antialiased dark",
           "bg-background"
