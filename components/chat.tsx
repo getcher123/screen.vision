@@ -388,7 +388,7 @@ export function Chat() {
                   >
                     here
                   </a>{" "}
-                  if you&apos;d like to self-host it.
+                  if you&apos;re worried about data privacy.
                   <br />
                 </p>
               </div>
