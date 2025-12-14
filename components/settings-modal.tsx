@@ -21,6 +21,16 @@ interface LMStudioModel {
   owned_by: string;
 }
 
+type OS = "mac" | "linux" | "windows";
+
+const getOS = (): OS => {
+  if (typeof navigator === "undefined") return "mac";
+  const platform = navigator.platform.toLowerCase();
+  if (platform.includes("mac")) return "mac";
+  if (platform.includes("linux")) return "linux";
+  return "windows";
+};
+
 const PROVIDER_LABELS: Record<Provider, string> = {
   ollama: "Ollama",
   lmstudio: "LM Studio",
@@ -31,14 +41,46 @@ interface ConnectionError {
   message: string;
 }
 
+interface OllamaInstruction {
+  steps: (string | { text: string; code?: string })[];
+}
+
+const OLLAMA_INSTRUCTIONS: Record<OS, OllamaInstruction> = {
+  mac: {
+    steps: [
+      "Open Terminal",
+      { text: "Run:", code: 'launchctl setenv OLLAMA_ORIGINS "*"' },
+      "Restart Ollama",
+    ],
+  },
+  linux: {
+    steps: [
+      { text: "Run:", code: "sudo systemctl edit ollama.service" },
+      {
+        text: "Add under [Service]:",
+        code: '[Service]\nEnvironment="OLLAMA_ORIGINS=*"',
+      },
+      { text: "Reload daemon:", code: "sudo systemctl daemon-reload" },
+      { text: "Restart Ollama:", code: "sudo systemctl restart ollama" },
+    ],
+  },
+  windows: {
+    steps: [
+      "Quit Ollama from the taskbar",
+      'Open Settings and search for "environment variables"',
+      "Add variable OLLAMA_ORIGINS with value *",
+      "Restart Ollama",
+    ],
+  },
+};
+
 const PROVIDER_ERRORS: Record<
   Provider,
-  { message: string; helpImage: string }
+  { message: string; helpImage?: string }
 > = {
   ollama: {
     message:
       'Could not connect to Ollama. Make sure you have "Expose Ollama to the network" enabled in the Ollama settings.',
-    helpImage: "/ollama_help.png",
   },
   lmstudio: {
     message:
@@ -134,9 +176,7 @@ export function SettingsModal() {
     >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">
-            Local LLM Settings
-          </h2>
+          <h2 className="text-xl font-semibold text-gray-900">Local Mode</h2>
           <button
             onClick={closeSettings}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -147,8 +187,8 @@ export function SettingsModal() {
 
         <div className="px-6 py-5 space-y-5">
           <div className="p-3 rounded-xl text-sm bg-blue-50 text-blue-700">
-            <strong>Local Mode:</strong> Connect to a local model running on
-            your machine.
+            Connect to a local model running on your machine. Then, all of your
+            data is kept on your computer.
           </div>
 
           <div className="space-y-2">
@@ -177,11 +217,41 @@ export function SettingsModal() {
               <div className="p-3 rounded-xl text-sm bg-red-50 text-red-700">
                 {connectionError.message}
               </div>
-              <img
-                src={PROVIDER_ERRORS[connectionError.provider].helpImage}
-                alt={`${PROVIDER_LABELS[connectionError.provider]} setup help`}
-                className="w-full rounded-xl border border-gray-200"
-              />
+              {connectionError.provider === "ollama" ? (
+                <div className="space-y-3">
+                  <p className="text-sm font-medium text-gray-700">
+                    Then, allow Screen Vision to connect to Ollama:
+                  </p>
+                  <ol className="space-y-2 text-sm text-gray-600 list-decimal list-inside">
+                    {OLLAMA_INSTRUCTIONS[getOS()].steps.map((step, index) => (
+                      <li key={index}>
+                        {typeof step === "string" ? (
+                          step
+                        ) : (
+                          <span>
+                            {step.text}
+                            {step.code && (
+                              <pre className="mt-1 ml-5 p-2 bg-gray-100 rounded-lg text-xs font-mono overflow-x-auto whitespace-pre-wrap">
+                                {step.code}
+                              </pre>
+                            )}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : (
+                PROVIDER_ERRORS[connectionError.provider].helpImage && (
+                  <img
+                    src={PROVIDER_ERRORS[connectionError.provider].helpImage}
+                    alt={`${
+                      PROVIDER_LABELS[connectionError.provider]
+                    } setup help`}
+                    className="w-full rounded-xl border border-gray-200"
+                  />
+                )
+              )}
             </div>
           )}
 

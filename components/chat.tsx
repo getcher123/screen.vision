@@ -406,7 +406,8 @@ export function Chat() {
                   >
                     here
                   </a>{" "}
-                  if you&apos;re worried about data privacy.
+                  or enable Local Mode if you&apos;re worried about data
+                  privacy.
                   <br />
                 </p>
               </div>
