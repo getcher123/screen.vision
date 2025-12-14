@@ -291,14 +291,16 @@ export function Chat() {
           <span className="text-sm">Star on GitHub</span>
         </a>
 
-        <button
-          onClick={openSettings}
-          className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          <Cpu size={16} />
+        {!isMobile && (
+          <button
+            onClick={openSettings}
+            className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <Cpu size={16} />
 
-          <span className="text-sm">Local Mode</span>
-        </button>
+            <span className="text-sm">Local Mode</span>
+          </button>
+        )}
       </div>
     </div>
   );
@@ -371,7 +373,7 @@ export function Chat() {
 
         <div className="min-h-screen bg-grid-pattern">
           {navbar}
-          <div className="flex justify-center items-center flex-col h-[80dvh]">
+          <div className="flex justify-center items-center flex-col h-[75dvh]">
             <div className="flex flex-col justify-center items-center max-w-[800px] w-full font-inter px-4">
               <h1 className="mb-4 text-center text-5xl font-bold text-black tracking-tight">
                 Share your screen with AI
@@ -393,27 +395,19 @@ export function Chat() {
                   onSuggestedActionClicked={trackSuggestedActionClicked}
                 />
               </div>
-
-              <div className="mt-12 text-center text-sm text-gray-500 max-w-xl">
-                <p>
-                  This is a demo of an open-source project. You can easily host
-                  it yourself{" "}
-                  <a
-                    href="https://github.com/bullmeza/screen.vision?tab=readme-ov-file#self-hosting"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-gray-600 transition-colors"
-                  >
-                    here
-                  </a>{" "}
-                  or enable Local Mode if you&apos;re worried about data
-                  privacy.
-                  <br />
-                </p>
-              </div>
             </div>
           </div>
         </div>
+
+        {!isMobile && (
+          <div className="mt-12 text-center text-sm text-gray-500 w-full absolute bottom-6 left-0 right-0">
+            <p>
+              This is a demo of an open-source project. Enable Local Mode if
+              you&apos;re worried about data privacy.
+              <br />
+            </p>
+          </div>
+        )}
       </>
     );
   }

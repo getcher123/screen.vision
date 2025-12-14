@@ -32,8 +32,13 @@ const getOS = (): OS => {
 };
 
 const PROVIDER_LABELS: Record<Provider, string> = {
-  ollama: "Ollama",
   lmstudio: "LM Studio",
+  ollama: "Ollama",
+};
+
+const PROVIDER_IMAGES: Record<Provider, string> = {
+  lmstudio: "/lmstudio.png",
+  ollama: "/ollama.png",
 };
 
 interface ConnectionError {
@@ -159,6 +164,7 @@ export function SettingsModal() {
     setLocalSettings({ provider: null, model: "" });
     setModels([]);
     setConnectionError(null);
+    updateSettings({ provider: null, model: "" });
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -167,7 +173,8 @@ export function SettingsModal() {
     }
   };
 
-  const canSave = localSettings.provider && localSettings.model;
+  const canSave =
+    (localSettings.provider && localSettings.model) || !localSettings.provider;
 
   return (
     <div
@@ -200,12 +207,17 @@ export function SettingsModal() {
                 <button
                   key={provider}
                   onClick={() => handleProviderChange(provider)}
-                  className={`flex-1 px-4 py-2.5 rounded-xl border transition-all ${
+                  className={`flex-1 px-4 py-2.5 rounded-xl border transition-all flex items-center justify-center gap-2 ${
                     localSettings.provider === provider
                       ? "border-black bg-black text-white"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
                 >
+                  <img
+                    src={PROVIDER_IMAGES[provider]}
+                    alt={PROVIDER_LABELS[provider]}
+                    className="w-5 h-5 object-contain rounded-sm"
+                  />
                   {PROVIDER_LABELS[provider]}
                 </button>
               ))}
