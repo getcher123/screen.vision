@@ -40,7 +40,7 @@ async def handle_step_chat(request: FastAPIRequest, body: MessagesRequest):
 
     stream = client.chat.completions.create(
         messages=body.messages,
-        model="gpt-5-mini-2025-08-07",
+        model="gpt-5.1",
         stream=True,
         reasoning_effort="low",
     )
