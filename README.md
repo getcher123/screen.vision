@@ -1,4 +1,10 @@
+<div align="center">
+
 # Screen Vision
+
+### Get a guided tour for anything, right on your screen.
+
+</div>
 
 ![Screen Vision Demo](demo.gif)
 
