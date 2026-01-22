@@ -7,4 +7,9 @@ build:
   dockerfile: Dockerfile
 
 run:
+  persistenceMount: /data
+  image: null
+  command: null
+  args: null
   containerPort: 8000
+serviceType: compute
