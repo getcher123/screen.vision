@@ -25,20 +25,12 @@ import {
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 
-import { cn, getSystemInfo } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 import { ArrowUpIcon, SparklesIcon } from "./icons";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import {
-  Monitor,
-  Command,
-  Box,
-  Cloud,
-  Globe,
-  EyeOff,
-  Trash,
-} from "@geist-ui/icons";
+import { Monitor, Command, Box, Cloud } from "@geist-ui/icons";
 import { generateAction } from "@/lib/ai";
 
 export function MultimodalInput({
@@ -82,27 +74,11 @@ export function MultimodalInput({
 
     if (isDemo) return;
 
-    const systemInfo = getSystemInfo();
-    const osName = systemInfo.os.osName;
-
     setSuggestedActions([
-      ...(osName === "macOS"
-        ? [{ text: `Update ${osName}`, icon: "command" }]
-        : [
-            {
-              text: `Uninstall Microsoft Copilot`,
-              icon: "trash",
-            },
-          ]),
-      ...(osName !== "macOS"
-        ? [{ text: "Change DNS to 1.1.1.1", icon: "globe" }]
-        : [
-            {
-              text: 'Disable Mac "Liquid Glass"',
-              icon: "eye-off",
-            },
-          ]),
-      { text: "Create S3 bucket on Google Cloud", icon: "box" },
+      { text: "Создай фрейм 1920×1080", icon: "monitor" },
+      { text: "Выровняй по центру", icon: "command" },
+      { text: "Сделай компонент кнопки", icon: "box" },
+      { text: "Сделай автолэйаут", icon: "cloud" },
     ]);
   }, []);
 
@@ -156,12 +132,6 @@ export function MultimodalInput({
         return <Box size={16} />;
       case "cloud":
         return <Cloud size={16} />;
-      case "globe":
-        return <Globe size={16} />;
-      case "eye-off":
-        return <EyeOff size={16} />;
-      case "trash":
-        return <Trash size={16} />;
       default:
         return null;
     }
@@ -175,7 +145,7 @@ export function MultimodalInput({
         </div>
         <Textarea
           ref={textareaRef}
-          placeholder={placeholderText || "Send a message..."}
+          placeholder={placeholderText || "Введите сообщение..."}
           value={input || ""}
           onChange={handleInput}
           className={cn(
@@ -191,7 +161,7 @@ export function MultimodalInput({
 
               if (isLoading) {
                 toast.error(
-                  "Please wait for the model to finish its response!"
+                  "Дождитесь завершения ответа."
                 );
               } else {
                 submitForm();

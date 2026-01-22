@@ -51,7 +51,7 @@ export const MinimalTaskScreen = ({
                   className="text-md text-gray-600 opacity-0 animate-fade-in-up"
                   style={{ animationDelay: "100ms" }}
                 >
-                  Follow the steps at the bottom right of your screen.
+                  Следуйте шагам в правом нижнем углу экрана.
                 </p>
               </div>
             )}
@@ -68,7 +68,7 @@ export const MinimalTaskScreen = ({
                       ? "bg-green-100 text-green-600 scale-110"
                       : "hover:bg-gray-100 text-gray-400 hover:text-gray-600"
                   }`}
-                  aria-label="Thumbs up"
+                  aria-label="Палец вверх"
                 >
                   <ThumbUpIcon size={24} />
                 </button>
@@ -79,7 +79,7 @@ export const MinimalTaskScreen = ({
                       ? "bg-red-100 text-red-600 scale-110"
                       : "hover:bg-gray-100 text-gray-400 hover:text-gray-600"
                   }`}
-                  aria-label="Thumbs down"
+                  aria-label="Палец вниз"
                 >
                   <ThumbDownIcon size={24} />
                 </button>
@@ -94,7 +94,7 @@ export const MinimalTaskScreen = ({
               >
                 {feedbackSubmitted ? (
                   <div className="text-center py-4 text-green-600 font-medium animate-fade-in-up">
-                    Thanks you for your feedback!
+                    Спасибо за отзыв!
                   </div>
                 ) : (
                   <div className="pt-4">
@@ -103,8 +103,8 @@ export const MinimalTaskScreen = ({
                       onChange={(e) => setFeedbackText(e.target.value)}
                       placeholder={
                         selectedFeedback === "positive"
-                          ? "What did you like?"
-                          : "What could be improved?"
+                          ? "Что понравилось?"
+                          : "Что можно улучшить?"
                       }
                       className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-0 text-sm"
                       rows={3}
@@ -115,7 +115,7 @@ export const MinimalTaskScreen = ({
                         onClick={handleSubmitFeedback}
                         disabled={!feedbackText.trim()}
                       >
-                        Submit Feedback
+                        Отправить отзыв
                       </Button>
                     </div>
                   </div>

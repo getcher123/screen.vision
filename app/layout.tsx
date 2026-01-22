@@ -11,9 +11,9 @@ import { ChunkErrorHandler } from "./providers/ChunkErrorHandler";
 
 export const metadata = {
   metadataBase: new URL("https://screen.vision"),
-  title: "Screen Vision",
+  title: "Figma помощник",
   description:
-    "Share your screen with AI. Get a guided tour for anything, right on your screen.",
+    "Поделитесь экраном и получите пошаговые подсказки для задач в Figma.",
   icons: {
     icon: "/icon.png",
     shortcut: "/icon.png",
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body
         className={cn(
           GeistSans.className,

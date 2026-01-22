@@ -12,19 +12,19 @@ export const SafariSettingsGuide = ({
   const steps = [
     {
       number: 1,
-      title: "Open Safari Menu",
+      title: "Откройте меню Safari",
       description:
-        'Click on "Safari" in the top menu bar at the top-left of your screen',
+        'Нажмите "Safari" в верхнем меню слева',
     },
     {
       number: 2,
-      title: "Open Site Settings",
-      description: `Click on "Settings for screen.vision..." in the menu`,
+      title: "Откройте настройки сайта",
+      description: `Выберите "Settings for screen.vision..." в меню`,
     },
     {
       number: 3,
-      title: "Allow Pop-up Windows",
-      description: 'Find "Pop-up Windows" and change the dropdown to "Allow"',
+      title: "Разрешите всплывающие окна",
+      description: 'Найдите "Pop-up Windows" и выберите "Allow"',
     },
   ];
 
@@ -34,10 +34,10 @@ export const SafariSettingsGuide = ({
         {/* Header */}
         <div className=" px-6 py-4">
           <h2 className="text-black font-semibold text-xl">
-            Safari Setup Required
+            Нужна настройка Safari
           </h2>
           <p className="text-black/70 text-sm">
-            Enable pop-ups for the best experience
+            Включите всплывающие окна для лучшей работы
           </p>
         </div>
 
@@ -66,7 +66,7 @@ export const SafariSettingsGuide = ({
             onClick={onComplete}
             className="w-full bg-black hover:bg-black/80 text-white"
           >
-            Done
+            Готово
           </Button>
         </div>
       </div>

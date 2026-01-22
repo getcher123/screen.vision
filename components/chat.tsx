@@ -141,12 +141,12 @@ export function Chat() {
 
     if (trimmedText.length > 0) {
       if (trimmedText.length < 7) {
-        toast.error("Please describe your problem in more detail.");
+        toast.error("Опишите задачу подробнее.");
         return;
       }
 
       if (trimmedText.length > 400) {
-        toast.error("Please keep your description under 400 characters.");
+        toast.error("Пожалуйста, не более 400 символов.");
         return;
       }
 
@@ -290,7 +290,9 @@ export function Chat() {
         <div className="animate-spin">
           <LoaderIcon size={48} />
         </div>
-        <p className="mt-4 text-lg text-gray-600">Loading Screenshare</p>
+        <p className="mt-4 text-lg text-gray-600">
+          Загрузка демонстрации экрана
+        </p>
       </div>
     );
   }
@@ -323,20 +325,20 @@ export function Chat() {
                     <Monitor size={40} className="text-primary" />
                   </div>
                   <div className="space-y-3">
-                    <h2 className="text-2xl font-semibold">Sorry!</h2>
+                    <h2 className="text-2xl font-semibold">Извините!</h2>
                     <p className="text-muted-foreground text-lg leading-relaxed">
-                      Screen Vision is only available on computers. Please visit
-                      this page on a desktop or laptop.
+                      Сервис доступен только на компьютерах. Откройте эту
+                      страницу на десктопе или ноутбуке.
                     </p>
                   </div>
                 </div>
               ) : (
                 <>
                   <h1 className="mb-4 text-center text-5xl font-bold text-black tracking-tight">
-                    Share your screen with AI
+                    Поделитесь экраном с ИИ
                   </h1>
                   <h2 className="mb-8 text-center text-xl text-gray-500">
-                    Get a guided tour for anything, right on your screen.
+                    Получите пошаговые подсказки прямо на экране.
                   </h2>
 
                   <div className="w-full relative">
@@ -347,7 +349,7 @@ export function Chat() {
                       isLoading={false}
                       stop={() => {}}
                       messages={[]}
-                      placeholderText="Describe your problem here..."
+                      placeholderText="Опишите задачу..."
                       showSuggestions
                       onSuggestedActionClicked={trackSuggestedActionClicked}
                     />
@@ -360,15 +362,15 @@ export function Chat() {
 
         <div className="hidden md:block mt-12 text-center text-sm text-gray-500 w-full absolute bottom-6 left-0 right-0">
           <p>
-            This project is fully open-source. You can enable Local Mode or host
-            it yourself{" "}
+            Проект полностью с открытым исходным кодом. Вы можете включить
+            локальный режим или развернуть его сами{" "}
             <a
               href="https://github.com/bullmeza/screen.vision?tab=readme-ov-file#self-hosting"
               target="_blank"
               rel="noopener noreferrer"
               className="underline hover:text-gray-600 transition-colors"
             >
-              here
+              здесь
             </a>
             .
           </p>

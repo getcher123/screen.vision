@@ -53,28 +53,28 @@ interface OllamaInstruction {
 const OLLAMA_INSTRUCTIONS: Record<OS, OllamaInstruction> = {
   mac: {
     steps: [
-      "Open Terminal",
-      { text: "Run:", code: 'launchctl setenv OLLAMA_ORIGINS "*"' },
-      "Restart Ollama",
+      "Откройте Терминал",
+      { text: "Выполните:", code: 'launchctl setenv OLLAMA_ORIGINS "*"' },
+      "Перезапустите Ollama",
     ],
   },
   linux: {
     steps: [
-      { text: "Run:", code: "sudo systemctl edit ollama.service" },
+      { text: "Выполните:", code: "sudo systemctl edit ollama.service" },
       {
-        text: "Add under [Service]:",
+        text: "Добавьте в [Service]:",
         code: '[Service]\nEnvironment="OLLAMA_ORIGINS=*"',
       },
-      { text: "Reload daemon:", code: "sudo systemctl daemon-reload" },
-      { text: "Restart Ollama:", code: "sudo systemctl restart ollama" },
+      { text: "Перезагрузите daemon:", code: "sudo systemctl daemon-reload" },
+      { text: "Перезапустите Ollama:", code: "sudo systemctl restart ollama" },
     ],
   },
   windows: {
     steps: [
-      "Quit Ollama from the taskbar",
-      'Open Settings and search for "environment variables"',
-      "Add variable OLLAMA_ORIGINS with value *",
-      "Restart Ollama",
+      "Закройте Ollama через панель задач",
+      'Откройте настройки и найдите "переменные среды"',
+      "Добавьте переменную OLLAMA_ORIGINS со значением *",
+      "Перезапустите Ollama",
     ],
   },
 };
@@ -85,11 +85,11 @@ const PROVIDER_ERRORS: Record<
 > = {
   ollama: {
     message:
-      'Could not connect to Ollama. Make sure you have "Expose Ollama to the network" enabled in the Ollama settings.',
+      'Не удалось подключиться к Ollama. Убедитесь, что включён пункт "Expose Ollama to the network" в настройках Ollama.',
   },
   lmstudio: {
     message:
-      "Could not connect to LM Studio. Make sure your server is running and CORS is enabled.",
+      "Не удалось подключиться к LM Studio. Убедитесь, что сервер запущен и CORS включён.",
     helpImage: "/lmstudio_help.png",
   },
 };
@@ -181,9 +181,11 @@ export function SettingsModal() {
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden max-h-[90vh] overflow-y-auto">
+        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">Local Mode</h2>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Локальный режим
+          </h2>
           <button
             onClick={closeSettings}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -194,13 +196,13 @@ export function SettingsModal() {
 
         <div className="px-6 py-5 space-y-5">
           <div className="p-3 rounded-xl text-sm bg-blue-50 text-blue-700">
-            Connect to a local model running on your machine. Then, all of your
-            data is kept on your computer.
+            Подключитесь к локальной модели на вашем компьютере. Все данные
+            останутся на вашем устройстве.
           </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              Provider
+              Провайдер
             </label>
             <div className="flex gap-2">
               {(Object.keys(PROVIDER_LABELS) as Provider[]).map((provider) => (
@@ -232,7 +234,7 @@ export function SettingsModal() {
               {connectionError.provider === "ollama" ? (
                 <div className="space-y-3">
                   <p className="text-sm font-medium text-gray-700">
-                    Then, allow Screen Vision to connect to Ollama:
+                    Разрешите Figma помощнику подключаться к Ollama:
                   </p>
                   <ol className="space-y-2 text-sm text-gray-600 list-decimal list-inside">
                     {OLLAMA_INSTRUCTIONS[getOS()].steps.map((step, index) => (
@@ -270,16 +272,16 @@ export function SettingsModal() {
           {localSettings.provider && !connectionError && (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Model
+                Модель
               </label>
               {isLoadingModels ? (
                 <div className="flex items-center gap-2 px-4 py-2.5 border border-gray-200 rounded-xl text-gray-500">
                   <Loader size={16} className="animate-spin" />
-                  <span>Loading models...</span>
+                  <span>Загрузка моделей...</span>
                 </div>
               ) : models.length === 0 ? (
                 <div className="p-3 rounded-xl text-sm bg-yellow-50 text-yellow-700">
-                  No models found. Make sure you have models installed.
+                  Модели не найдены. Убедитесь, что они установлены.
                 </div>
               ) : (
                 <>
@@ -293,7 +295,7 @@ export function SettingsModal() {
                     }
                     className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300 transition-all bg-white"
                   >
-                    <option value="">Select a model</option>
+                    <option value="">Выберите модель</option>
                     {models.map((model) => (
                       <option key={model} value={model}>
                         {model}
@@ -301,8 +303,9 @@ export function SettingsModal() {
                     ))}
                   </select>
                   <p className="text-xs text-gray-500">
-                    Select from your locally installed vision models. Using{" "}
-                    <u>at least Qwen3 VL 30B Instruct</u> is recommended.
+                    Выберите из локально установленных vision-моделей.
+                    Рекомендуется использовать{" "}
+                    <u>не ниже Qwen3 VL 30B Instruct</u>.
                   </p>
                 </>
               )}
@@ -316,7 +319,7 @@ export function SettingsModal() {
             onClick={handleClear}
             className="px-4 py-2 rounded-xl text-gray-500 hover:text-gray-700"
           >
-            Clear Settings
+            Сбросить настройки
           </Button>
           <div className="flex gap-3">
             <Button
@@ -324,14 +327,14 @@ export function SettingsModal() {
               onClick={closeSettings}
               className="px-4 py-2 rounded-xl"
             >
-              Cancel
+              Отмена
             </Button>
             <Button
               onClick={handleSave}
               disabled={!canSave}
               className="px-4 py-2 bg-black text-white rounded-xl hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Save Settings
+              Сохранить
             </Button>
           </div>
         </div>

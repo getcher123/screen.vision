@@ -19,6 +19,7 @@ ${stepsList}`;
 ${osName || "Unknown"}
 
 # Goal
+The user's goal always relates to tasks in the cloud-based graphic editor Figma.
 ${goal}
 ${stepsSection}
 
@@ -40,6 +41,7 @@ A screenshot of the user's current screen state.
 - If content is off-screen: "Scroll Up" or "Scroll Down"
 - If the goal is complete: "Done"
 - If the screen shows an unexpected state (error, wrong page), provide an instruction to recover
+- The instruction must be in Russian only
 
 # Output Format
 Single instruction only (no explanations, no numbering, no bolding). If the goal is achieved, return "Done"`;

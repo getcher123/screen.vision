@@ -57,7 +57,7 @@ export function ForTeamsModal({ isOpen, onClose }: ForTeamsModalProps) {
     >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">For Teams</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Для команд</h2>
           <button
             onClick={handleClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -85,20 +85,20 @@ export function ForTeamsModal({ isOpen, onClose }: ForTeamsModalProps) {
                 </svg>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Thank you!
+                Спасибо!
               </h3>
-              <p className="text-gray-600">We&apos;ll be in touch soon.</p>
+              <p className="text-gray-600">Мы свяжемся с вами в ближайшее время.</p>
             </div>
           ) : (
             <>
               <p className="text-sm text-gray-600">
-                Interested in Screen Vision for your team? Leave your details
-                and we&apos;ll get in touch.
+                Хотите Figma помощника для команды? Оставьте контакты, и мы
+                свяжемся с вами.
               </p>
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">
-                  Company Email
+                  Рабочий email
                 </label>
                 <input
                   type="email"
@@ -111,13 +111,13 @@ export function ForTeamsModal({ isOpen, onClose }: ForTeamsModalProps) {
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">
-                  Which use case are you interested in?
+                  Какой сценарий вас интересует?
                 </label>
                 <input
                   type="text"
                   value={useCase}
                   onChange={(e) => setUseCase(e.target.value)}
-                  placeholder="e.g. Customer support, onboarding, etc."
+                  placeholder="например: поддержка, онбординг"
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300 transition-all"
                 />
               </div>
@@ -125,7 +125,7 @@ export function ForTeamsModal({ isOpen, onClose }: ForTeamsModalProps) {
           )}
 
           <div className="p-3 rounded-xl text-sm bg-gray-50 text-gray-600">
-            You can also contact us at{" "}
+            Также можно написать нам на{" "}
             <a
               href="mailto:mail@screen.vision"
               className="text-black font-medium hover:underline"
@@ -141,7 +141,7 @@ export function ForTeamsModal({ isOpen, onClose }: ForTeamsModalProps) {
               onClick={handleClose}
               className="px-4 py-2 bg-black text-white rounded-xl hover:bg-gray-800"
             >
-              Close
+              Закрыть
             </Button>
           ) : (
             <>
@@ -150,14 +150,14 @@ export function ForTeamsModal({ isOpen, onClose }: ForTeamsModalProps) {
                 onClick={handleClose}
                 className="px-4 py-2 rounded-xl"
               >
-                Cancel
+                Отмена
               </Button>
               <Button
                 onClick={handleSubmit}
                 disabled={!canSubmit}
                 className="px-4 py-2 bg-black text-white rounded-xl hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? "Submitting..." : "Submit"}
+                {isSubmitting ? "Отправка..." : "Отправить"}
               </Button>
             </>
           )}

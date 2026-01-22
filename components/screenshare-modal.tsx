@@ -46,13 +46,13 @@ export const ScreenshareModal = ({
           </div>
 
           <h2 className="text-2xl font-semibold text-black mb-3">
-            Share your screen
+            Поделитесь экраном
           </h2>
 
           <p className="text-gray-600 mb-8 leading-relaxed">
-            Please share your screen so we can see the issue and guide you
-            through the solution. <br />
-            <u>We don&apos;t store any of your screen data. </u>
+            Пожалуйста, поделитесь экраном, чтобы мы увидели задачу и смогли
+            провести вас по шагам. <br />
+            <u>Мы не храним данные вашего экрана.</u>
           </p>
 
           <Button
@@ -60,7 +60,7 @@ export const ScreenshareModal = ({
             disabled={isLoading}
             className="w-full bg-black text-white hover:bg-gray-800 py-6 text-lg font-medium rounded-md transition-colors"
           >
-            {isLoading ? "Starting..." : "Get Started"}
+            {isLoading ? "Запуск..." : "Начать"}
           </Button>
         </div>
       </motion.div>

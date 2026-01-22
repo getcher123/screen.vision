@@ -76,7 +76,7 @@ export const TaskCardBase = ({
                 isFadingOut ? "animate-fade-out" : "animate-fade-in-pulse"
               }`}
             >
-              Detecting changes...
+              Отслеживаем изменения...
             </span>
           )}
         </div>

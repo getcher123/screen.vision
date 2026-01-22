@@ -85,7 +85,14 @@ export const TaskScreen = ({
 
   const isLoadingTask = !task || isLoading;
   const taskLower = task?.toLowerCase();
-  const isTaskCompleted = taskLower === "done" || taskLower === "done.";
+  const isTaskCompleted = [
+    "done",
+    "done.",
+    "готово",
+    "готово.",
+    "завершено",
+    "завершено.",
+  ].includes(taskLower ?? "");
 
   useEffect(() => {
     if (isTaskCompleted && !hasTrackedCompletion.current) {
@@ -276,7 +283,7 @@ export const TaskScreen = ({
                 handleSubmit={handleSubmit}
                 isLoading={isLoadingFollowUp}
                 messages={[]}
-                placeholderText="Stuck? Ask a question..."
+                placeholderText="Застряли? Задайте вопрос..."
                 size={isPip ? "sm" : undefined}
               />
             </form>

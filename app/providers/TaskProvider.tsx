@@ -255,18 +255,35 @@ export function TaskProvider({ children }: { children: ReactNode }) {
     }
 
     const taskLower = currentTaskText.toLowerCase();
-    if (taskLower === "done" || taskLower === "done.") {
+    if (
+      taskLower === "done" ||
+      taskLower === "done." ||
+      taskLower === "готово" ||
+      taskLower === "готово." ||
+      taskLower === "завершено" ||
+      taskLower === "завершено."
+    ) {
       setIsAnalyzingScreenChange(false);
       return;
     }
 
     const isLink = currentTaskText.startsWith("https://");
-    const isWait = taskLower === "wait";
+    const isWait =
+      taskLower === "wait" ||
+      taskLower === "wait." ||
+      taskLower === "подожди" ||
+      taskLower === "подожди." ||
+      taskLower === "подождите" ||
+      taskLower === "подождите." ||
+      taskLower === "ждите" ||
+      taskLower === "ждите." ||
+      taskLower === "ожидайте" ||
+      taskLower === "ожидайте.";
 
     const taskDescription = isLink
-      ? `Navigate to ${currentTaskText}`
+      ? `Перейдите по адресу ${currentTaskText}`
       : isWait
-      ? "Wait for the window to finish loading"
+      ? "Подождите, пока окно загрузится"
       : currentTaskText;
 
     isCheckingStepRef.current = true;

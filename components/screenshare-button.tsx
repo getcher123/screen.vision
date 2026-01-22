@@ -22,7 +22,7 @@ export const ScreenshareButton = () => {
         className="bg-primary flex gap-2 items-center text-white px-4 py-2 rounded-md text-lg"
       >
         <Airplay size={24} />
-        {isSharing ? "Stop Sharing" : "Share Your Screen"}
+        {isSharing ? "Остановить показ" : "Поделиться экраном"}
       </button>
     </>
   );

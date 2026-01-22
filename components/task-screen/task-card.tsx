@@ -50,7 +50,7 @@ const FollowUpDropdown = ({
             <Markdown>{followUp.answer}</Markdown>
           ) : (
             <span className="text-xs text-foreground/50 animate-fade-in-pulse">
-              Loading...
+              Загрузка...
             </span>
           )}
         </div>
@@ -200,10 +200,32 @@ export const TaskCard = ({
   const textLower = text.toLowerCase();
   const link = extractLink(text);
 
-  const isCompleted = textLower === "done" || textLower === "done.";
-  const isWaiting = textLower === "wait" || textLower === "wait.";
-  const isScrollDown = textLower.startsWith("scroll down");
-  const isScrollUp = textLower.startsWith("scroll up");
+  const isCompleted = [
+    "done",
+    "done.",
+    "готово",
+    "готово.",
+    "завершено",
+    "завершено.",
+  ].includes(textLower);
+  const isWaiting = [
+    "wait",
+    "wait.",
+    "подожди",
+    "подожди.",
+    "подождите",
+    "подождите.",
+    "ждите",
+    "ждите.",
+    "ожидайте",
+    "ожидайте.",
+  ].includes(textLower);
+  const isScrollDown =
+    textLower.startsWith("scroll down") ||
+    (textLower.startsWith("прокрут") && textLower.includes("вниз"));
+  const isScrollUp =
+    textLower.startsWith("scroll up") ||
+    (textLower.startsWith("прокрут") && textLower.includes("вверх"));
 
   const handleToggleExpand = () => {
     if (isExpanded) {
@@ -218,11 +240,11 @@ export const TaskCard = ({
   };
 
   const getDisplayText = () => {
-    if (link) return `Open ${link}`;
-    if (isCompleted) return "Done";
-    if (isWaiting) return "Wait";
-    if (isScrollDown) return "Scroll down";
-    if (isScrollUp) return "Scroll up";
+    if (link) return `Откройте ${link}`;
+    if (isCompleted) return "Готово";
+    if (isWaiting) return "Подождите";
+    if (isScrollDown) return "Прокрутите вниз";
+    if (isScrollUp) return "Прокрутите вверх";
     return text.split("\n")[0] || text;
   };
 
@@ -272,7 +294,7 @@ export const TaskCard = ({
                 }}
                 leftIcon={<CornerUpLeft />}
               >
-                Return Here
+                Вернуться сюда
               </Button>
             </div>
           )}
@@ -308,7 +330,7 @@ export const TaskCard = ({
           )}
           <div className="mt-4">
             <Button size="sm" leftIcon={<Check />}>
-              Done
+              Готово
             </Button>
           </div>
         </div>
@@ -332,12 +354,12 @@ export const TaskCard = ({
           <div className="mb-6 mt-2">
             <span className="text-6xl">🎉</span>
           </div>
-          <p className="text-2xl font-bold mb-2">All done!</p>
+          <p className="text-2xl font-bold mb-2">Готово!</p>
           <p className="text-gray-500 mb-4">
-            You&apos;ve completed all the steps.
+            Вы завершили все шаги.
           </p>
           {onStartOver && (
-            <Button onClick={onStartOver}>Ask a New Question</Button>
+            <Button onClick={onStartOver}>Задать новый вопрос</Button>
           )}
         </div>
       </TaskCardBase>
@@ -352,7 +374,7 @@ export const TaskCard = ({
         showRefreshButton
         onRefresh={onRefresh}
         actionButton={{
-          label: "Done",
+          label: "Готово",
           icon: <Check />,
           onClick: onNextTask ?? (() => {}),
           disabled: isLoading,
@@ -362,7 +384,7 @@ export const TaskCard = ({
       >
         <div className="flex items-center gap-3">
           <Clock className="w-5 h-5 text-foreground/60" />
-          <span>Wait for the page to load</span>
+          <span>Подождите, пока страница загрузится</span>
         </div>
       </TaskCardBase>
     );
@@ -376,7 +398,7 @@ export const TaskCard = ({
         showRefreshButton
         onRefresh={onRefresh}
         actionButton={{
-          label: "Done",
+          label: "Готово",
           icon: <Check />,
           onClick: onNextTask ?? (() => {}),
           disabled: isLoading,
@@ -390,7 +412,7 @@ export const TaskCard = ({
           ) : (
             <ChevronDown className="w-5 h-5 text-foreground/60" />
           )}
-          <span>Scroll {isScrollUp ? "up" : "down"}</span>
+          <span>Прокрутите {isScrollUp ? "вверх" : "вниз"}</span>
         </div>
       </TaskCardBase>
     );
@@ -404,7 +426,7 @@ export const TaskCard = ({
         showRefreshButton
         onRefresh={onRefresh}
         actionButton={{
-          label: "Done",
+          label: "Готово",
           icon: <Check />,
           onClick: onNextTask ?? (() => {}),
           disabled: isLoading,
@@ -414,7 +436,7 @@ export const TaskCard = ({
       >
         <div className={isPip ? "" : "flex flex-col gap-1"}>
           <span>
-            Open a new tab in your browser and navigate to{isPip ? " " : ":"}
+            Откройте новую вкладку и перейдите по адресу{isPip ? " " : ":"}
           </span>
           <span
             className="text-blue-600 hover:underline cursor-pointer break-all"
@@ -434,12 +456,12 @@ export const TaskCard = ({
       taskHistoryLength={totalTasks}
       showRefreshButton
       onRefresh={onRefresh}
-      actionButton={{
-        label: "Done",
-        icon: <Check />,
-        onClick: onNextTask ?? (() => {}),
-        disabled: isLoading,
-      }}
+        actionButton={{
+          label: "Готово",
+          icon: <Check />,
+          onClick: onNextTask ?? (() => {}),
+          disabled: isLoading,
+        }}
       isAnalyzingScreen={isAnalyzingScreen}
       footer={<FollowUpsList followUps={task.followUps} />}
       decreasePaddingButton={!task.previewImage}
@@ -467,7 +489,7 @@ const TaskContent = ({
     return (
       <div className={isPip ? "" : "flex flex-col gap-1"}>
         <span>
-          Open a new tab in your browser and navigate to{isPip ? " " : ":"}
+          Откройте новую вкладку и перейдите по адресу{isPip ? " " : ":"}
         </span>
         <span
           className="text-blue-600 hover:underline cursor-pointer break-all"
@@ -519,16 +541,16 @@ interface ExceededLimitCardProps {
 export const ExceededLimitCard = ({ onStartOver }: ExceededLimitCardProps) => (
   <TaskCardBase>
     <div className="flex flex-col items-center justify-center text-center py-4">
-      <p className="text-2xl font-bold mb-2">Step limit reached</p>
+      <p className="text-2xl font-bold mb-2">Лимит шагов достигнут</p>
       <p className="text-gray-500 mb-4">
-        You&apos;ve reached the maximum number of steps for this session.
+        Вы достигли максимального числа шагов в этой сессии.
       </p>
       {onStartOver && (
         <button
           onClick={onStartOver}
           className="text-sm text-blue-600 hover:underline"
         >
-          Start over
+          Начать заново
         </button>
       )}
     </div>
