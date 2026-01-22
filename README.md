@@ -43,7 +43,7 @@ Screen Vision is designed to process your data securely without retaining it.
 
 - **Frontend**: Next.js 13, React 18, Tailwind CSS, Zustand
 - **Backend**: FastAPI, Python
-- **AI**: OpenAI GPT models, Qwen-VL (via OpenRouter)
+- **AI**: OpenAI GPT models, Qwen-VL (via DeepInfra)
 - **UI**: Radix primitives, Framer Motion, Lucide icons
 
 **Frontend (Next.js + React)**
@@ -91,11 +91,14 @@ Create a `.env.local` file in the root directory:
 # Required - powers the main step-by-step logic
 OPENAI_API_KEY=sk-...
 
-# Required - used for verification and coordinate detection (Qwen models)
-OPENROUTER_API_KEY=sk-or-...
+# Required - used for verification/coordinates fallback (vision models via DeepInfra)
+DEEPINFRA_KEY=...
+
+# Optional - check endpoint uses Gemini directly if set
+GEMINI_API_KEY=...
 ```
 
-The app uses OpenAI for primary reasoning and OpenRouter to access Qwen-VL models for specific tasks like step verification. You can swap these out by modifying `api/index.py` if you prefer different providers.
+The app uses OpenAI for primary reasoning and DeepInfra for vision models in `/api/check` fallback and `/api/coordinates`. You can swap these out by modifying `api/index.py` if you prefer different providers.
 
 ### Running Locally
 
@@ -111,6 +114,46 @@ This runs:
 - FastAPI server on `http://localhost:8000`
 
 Open your browser to `http://localhost:3000` and you're good to go.
+
+## Running on WSL (Windows)
+
+WSL builds can fail in `/mnt/c` due to filesystem permissions. Run the project from your Linux home directory for best results.
+
+```bash
+# Copy the repo into WSL home (adjust path if needed)
+rsync -a --delete --exclude node_modules --exclude .venv /mnt/c/screen.vision/ ~/screen.vision/
+cd ~/screen.vision
+
+# Install Node.js 20 via nvm (one-time)
+curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+source "$NVM_DIR/nvm.sh"
+nvm install 20
+nvm use 20
+corepack enable
+corepack prepare pnpm@10.21.0 --activate
+
+# Install deps
+pnpm install
+python3 -m virtualenv .venv
+.venv/bin/pip install -r requirements.txt
+
+# Run (frontend + backend)
+NEXT_PUBLIC_API_URL="http://127.0.0.1:8020/api" \
+  pnpm run next-dev -- --port 3000 --hostname 127.0.0.1
+.venv/bin/python -m uvicorn api.index:app --reload --host 127.0.0.1 --port 8020
+```
+
+Open `http://localhost:3000` in Windows.
+
+## GitHub Pages (Frontend)
+
+This repo includes a GitHub Actions workflow that exports the Next.js frontend and deploys it to GitHub Pages on every push to `main`.
+
+Setup:
+- Enable Pages: repo Settings → Pages → Source: GitHub Actions.
+- (Optional) Set `NEXT_PUBLIC_API_URL` as a repo variable for your hosted API.
+- (Optional) Set `NEXT_PUBLIC_BASE_PATH` if you want a custom base path (defaults to `/<repo>` for Pages).
 
 ### Running in Production
 

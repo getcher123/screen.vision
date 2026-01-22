@@ -1,7 +1,7 @@
 from typing import Any, List
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request as FastAPIRequest
+from fastapi import FastAPI, HTTPException, Request as FastAPIRequest
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -47,11 +47,24 @@ app.add_middleware(
 class MessagesRequest(BaseModel):
     messages: List[Any]
 
+DEEPINFRA_BASE_URL = "https://api.deepinfra.com/v1/openai"
+
+def _required_env(name: str) -> str:
+    value = os.environ.get(name)
+    if not value:
+        raise HTTPException(status_code=500, detail=f"Missing {name} (set it in .env.local).")
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in ("'", '"'):
+        value = value[1:-1].strip()
+    if value.startswith("="):
+        value = value.lstrip("=")
+    return value
+
 
 @app.post("/api/step")
 @limiter.limit("20/minute;300/hour")
 async def handle_step_chat(request: FastAPIRequest, body: MessagesRequest):
-    client = OpenAI()
+    client = OpenAI(api_key=_required_env("OPENAI_API_KEY"))
 
     stream = client.chat.completions.create(
         messages=body.messages,
@@ -71,7 +84,7 @@ async def handle_step_chat(request: FastAPIRequest, body: MessagesRequest):
 @app.post("/api/help")
 @limiter.limit("8/minute;100/hour")
 async def handle_help_chat(request: FastAPIRequest, body: MessagesRequest):
-    client = OpenAI()
+    client = OpenAI(api_key=_required_env("OPENAI_API_KEY"))
 
     stream = client.chat.completions.create(
         messages=body.messages,
@@ -140,20 +153,19 @@ async def handle_check_chat(request: FastAPIRequest, body: MessagesRequest):
         )
         return response
     else:
+        deepinfra_key = _required_env("DEEPINFRA_KEY")
+
+        deepinfra_model = os.environ.get(
+            "DEEPINFRA_CHECK_MODEL", "Qwen/Qwen3-VL-30B-A3B-Instruct"
+        )
+
         client = OpenAI(
-            base_url="https://openrouter.ai/api/v1",
-            api_key=os.environ.get("OPENROUTER_API_KEY"),
+            base_url=DEEPINFRA_BASE_URL,
+            api_key=deepinfra_key,
         )
         kwargs = {
             "messages": body.messages,
-            "model": "google/gemini-3-flash-preview",
-            "extra_body": {
-                "provider": {
-                    "order": ["Google AI Studio"],
-                    "allow_fallbacks": True,
-                }
-            },
-            "reasoning_effort": "minimal",
+            "model": deepinfra_model,
             "stream": True,
         }
 
@@ -170,15 +182,20 @@ async def handle_check_chat(request: FastAPIRequest, body: MessagesRequest):
 @app.post("/api/coordinates")
 @limiter.limit("15/minute;200/hour")
 async def handle_coordinate_chat(request: FastAPIRequest, body: MessagesRequest):
+    deepinfra_key = _required_env("DEEPINFRA_KEY")
+
+    deepinfra_model = os.environ.get(
+        "DEEPINFRA_COORDINATES_MODEL", "Qwen/Qwen3-VL-30B-A3B-Instruct"
+    )
+
     client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.environ.get("OPENROUTER_API_KEY"),
+        base_url=DEEPINFRA_BASE_URL,
+        api_key=deepinfra_key,
     )
 
     stream = client.chat.completions.create(
         messages=body.messages,
-        model="qwen/qwen3-vl-30b-a3b-instruct",
-        extra_body={"provider": {"order": ["Fireworks"], "allow_fallbacks": True}},
+        model=deepinfra_model,
         stream=True,
     )
 
