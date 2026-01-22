@@ -171,3 +171,29 @@ uvicorn api.index:app --host 0.0.0.0 --port 8000
 ```
 
 Or use the included `Procfile` for platforms like Railway or Heroku.
+
+## Docker (Backend)
+
+Build the image:
+
+```bash
+docker build -t screen-vision-backend .
+```
+
+Run:
+
+```bash
+docker run --rm -p 8000:8000 \
+  -e OPENAI_API_KEY=sk-... \
+  -e DEEPINFRA_KEY=... \
+  screen-vision-backend
+```
+
+Required env vars (backend):
+- `OPENAI_API_KEY`
+- `DEEPINFRA_KEY`
+
+Optional:
+- `GEMINI_API_KEY` (enables Gemini in `/api/check`)
+- `DEEPINFRA_CHECK_MODEL`
+- `DEEPINFRA_COORDINATES_MODEL`
