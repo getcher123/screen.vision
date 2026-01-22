@@ -152,8 +152,11 @@ This repo includes a GitHub Actions workflow that exports the Next.js frontend a
 
 Setup:
 - Enable Pages: repo Settings → Pages → Source: GitHub Actions.
-- (Optional) Set `NEXT_PUBLIC_API_URL` as a repo variable for your hosted API.
-- (Optional) Set `NEXT_PUBLIC_BASE_PATH` if you want a custom base path (defaults to `/<repo>` for Pages).
+
+Frontend env vars (GitHub → Settings → Secrets and variables → Actions → Variables):
+- `NEXT_PUBLIC_API_URL` (required for production) — URL вашего API, например `https://api.example.com/api`
+- `NEXT_PUBLIC_BASE_PATH` (optional) — базовый путь для Pages (по умолчанию `/<repo>`)
+- `NEXT_PUBLIC_POSTHOG_KEY` (optional) — ключ PostHog для аналитики
 
 ### Running in Production
 
