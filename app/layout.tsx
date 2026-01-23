@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { TaskProvider } from "./providers/TaskProvider";
 import { AnalyticsProvider } from "./providers/AnalyticsProvider";
 import { SettingsProvider } from "./providers/SettingsProvider";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { PostHogProvider } from "./providers/PosthogProvider";
 import { ChunkErrorHandler } from "./providers/ChunkErrorHandler";
 
@@ -21,9 +21,9 @@ export const metadata = {
   },
 };
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// Use a local font to avoid build-time fetches to Google Fonts (breaks in CI / some networks).
+const inter = localFont({
+  src: "../assets/geist.ttf",
   variable: "--font-inter",
 });
 

@@ -306,7 +306,7 @@ export function Chat() {
         <div className="min-h-screen bg-grid-pattern">
           <Navbar />
 
-          <div className="flex justify-center items-center flex-col h-[75dvh]">
+          <div className="flex justify-center items-center flex-col min-h-[75dvh] py-8">
             <div className="flex flex-col justify-center items-center max-w-[800px] w-full font-inter px-4">
               {showMobileBlocked ? (
                 <div className="flex flex-col items-center gap-6 p-8 max-w-md text-center">
@@ -331,6 +331,15 @@ export function Chat() {
                   </h2>
 
                   <div className="w-full relative">
+                    <div className="mb-5 flex justify-center">
+                      <img
+                        src="demo2.gif"
+                        alt="Демонстрация работы"
+                        className="w-full max-w-[720px] max-h-[260px] md:max-h-[340px] object-contain rounded-xl border border-gray-200 bg-white"
+                        loading="lazy"
+                      />
+                    </div>
+
                     <MultimodalInput
                       input={input}
                       setInput={setInput}
