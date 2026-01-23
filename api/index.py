@@ -12,7 +12,7 @@ import os
 from google import genai
 from google.genai import types
 
-from .utils.stream import stream_text
+from .utils.stream import stream_text, stream_text_from_string
 from .utils.gemini import convert_openai_to_gemini, stream_gemini
 
 
@@ -52,6 +52,7 @@ class MessagesRequest(BaseModel):
     messages: List[Any]
 
 DEEPINFRA_BASE_URL = "https://api.deepinfra.com/v1/openai"
+DEEPINFRA_DEFAULT_MODEL = "Qwen/Qwen3-VL-30B-A3B-Instruct"
 
 def _required_env(name: str) -> str:
     value = os.environ.get(name)
@@ -118,14 +119,14 @@ async def handle_help_chat(request: FastAPIRequest, body: MessagesRequest):
 @app.post("/api/check")
 @limiter.limit("30/minute;500/hour")
 async def handle_check_chat(request: FastAPIRequest, body: MessagesRequest):
-    gemini_api_key = os.environ.get("GEMINI_API_KEY")
+    # Default to DeepInfra for stability in generic container environments.
+    # Enable Gemini explicitly by setting CHECK_PROVIDER=gemini.
+    check_provider = (os.environ.get("CHECK_PROVIDER") or "").strip().lower()
 
-    if gemini_api_key:
-        client = genai.Client(
-            vertexai=True,
-            api_key=gemini_api_key,
-        )
-        model = "gemini-3-flash-preview"
+    if check_provider == "gemini":
+        gemini_api_key = _required_env("GEMINI_API_KEY")
+        client = genai.Client(api_key=gemini_api_key)
+        model = os.environ.get("GEMINI_CHECK_MODEL", "gemini-3-flash-preview")
 
         system_instruction_parts = []
         for msg in body.messages:
@@ -161,36 +162,45 @@ async def handle_check_chat(request: FastAPIRequest, body: MessagesRequest):
             config=generate_content_config,
         )
 
-        response = StreamingResponse(
+        return StreamingResponse(
             stream_gemini(stream),
             media_type="text/event-stream",
         )
-        return response
-    else:
-        deepinfra_key = _required_env("DEEPINFRA_KEY")
 
-        deepinfra_model = os.environ.get(
-            "DEEPINFRA_CHECK_MODEL", "Qwen/Qwen3-VL-30B-A3B-Instruct"
-        )
+    deepinfra_key = _required_env("DEEPINFRA_KEY")
+    deepinfra_model = os.environ.get("DEEPINFRA_CHECK_MODEL", DEEPINFRA_DEFAULT_MODEL)
 
-        client = OpenAI(
-            base_url=DEEPINFRA_BASE_URL,
-            api_key=deepinfra_key,
-        )
-        kwargs = {
-            "messages": body.messages,
-            "model": deepinfra_model,
-            "stream": True,
-        }
-
-    stream = client.chat.completions.create(**kwargs)
-
-    response = StreamingResponse(
-        stream_text(stream, {}),
-        media_type="text/event-stream",
+    client = OpenAI(
+        base_url=DEEPINFRA_BASE_URL,
+        api_key=deepinfra_key,
     )
 
-    return response
+    # Use non-streaming completion to avoid proxy/stream aborts; we still return SSE
+    # to match the frontend's expected format.
+    try:
+        completion = client.chat.completions.create(
+            messages=body.messages,
+            model=deepinfra_model,
+            stream=False,
+        )
+    except Exception as exc:
+        if deepinfra_model != DEEPINFRA_DEFAULT_MODEL:
+            print(
+                f"[check] DeepInfra model '{deepinfra_model}' failed, falling back to '{DEEPINFRA_DEFAULT_MODEL}': {exc}"
+            )
+            completion = client.chat.completions.create(
+                messages=body.messages,
+                model=DEEPINFRA_DEFAULT_MODEL,
+                stream=False,
+            )
+        else:
+            raise
+
+    text = (completion.choices[0].message.content or "").strip()
+    return StreamingResponse(
+        stream_text_from_string(text),
+        media_type="text/event-stream",
+    )
 
 
 @app.post("/api/coordinates")
@@ -199,7 +209,7 @@ async def handle_coordinate_chat(request: FastAPIRequest, body: MessagesRequest)
     deepinfra_key = _required_env("DEEPINFRA_KEY")
 
     deepinfra_model = os.environ.get(
-        "DEEPINFRA_COORDINATES_MODEL", "Qwen/Qwen3-VL-30B-A3B-Instruct"
+        "DEEPINFRA_COORDINATES_MODEL", DEEPINFRA_DEFAULT_MODEL
     )
 
     client = OpenAI(

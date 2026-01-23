@@ -246,3 +246,19 @@ def stream_text(
     except Exception:
         traceback.print_exc()
         raise
+
+
+def stream_text_from_string(text: str):
+    """Yield Server-Sent Events for a non-streaming text response."""
+    def format_sse(payload: dict) -> str:
+        return f"data: {json.dumps(payload, separators=(',', ':'))}\n\n"
+
+    message_id = f"msg-{uuid.uuid4().hex}"
+    text_stream_id = "text-1"
+
+    yield format_sse({"type": "start", "messageId": message_id})
+    yield format_sse({"type": "text-start", "id": text_stream_id})
+    yield format_sse({"type": "text-delta", "id": text_stream_id, "delta": text})
+    yield format_sse({"type": "text-end", "id": text_stream_id})
+    yield format_sse({"type": "finish", "messageMetadata": {"finishReason": "stop"}})
+    yield "data: [DONE]\n\n"
