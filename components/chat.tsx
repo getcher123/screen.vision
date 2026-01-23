@@ -7,7 +7,6 @@ import { useScreenShare } from "@/hooks/screenshare";
 import { useTaskPip } from "@/hooks/pip";
 import { useTasks } from "@/app/providers/TaskProvider";
 import { useAnalytics } from "@/app/providers/AnalyticsProvider";
-import { useSettings } from "@/app/providers/SettingsProvider";
 import { MinimalTaskScreen } from "./task-screen";
 import { SafariSettingsGuide } from "./safari-settings-guide";
 import { ScreenshareModal } from "./screenshare-modal";
@@ -52,8 +51,6 @@ export function Chat() {
 
   const taskContext = useTasks();
 
-  const { openSettings } = useSettings();
-
   const {
     tasks,
     isLoading: isLoadingTask,
@@ -91,7 +88,6 @@ export function Chat() {
   const [browserIsSafari, setBrowserIsSafari] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileBlocked, setShowMobileBlocked] = useState(false);
-  const [githubStars, setGithubStars] = useState(252);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -103,13 +99,6 @@ export function Chat() {
     );
     setBrowserIsSafari(isSafari());
     setIsMobile(isMobileDevice());
-
-    fetch("https://api.github.com/repos/bullmeza/screen.vision")
-      .then((res) => res.json())
-      .then((data) => {
-        setGithubStars(data.stargazers_count ?? 25);
-      })
-      .catch(() => setGithubStars(25));
   }, []);
 
   // Handler to complete Safari settings and persist to localStorage
@@ -274,7 +263,7 @@ export function Chat() {
     return (
       <>
         <div className="flex justify-center items-center flex-col h-[100dvh]">
-          <Navbar githubStars={githubStars} openSettings={openSettings} />
+          <Navbar />
 
           <div className="flex flex-col justify-center items-center max-w-[800px] w-full font-inter">
             <SafariSettingsGuide onComplete={handleSafariSettingsComplete} />
@@ -315,7 +304,7 @@ export function Chat() {
         <SettingsModal />
 
         <div className="min-h-screen bg-grid-pattern">
-          <Navbar githubStars={githubStars} openSettings={openSettings} />
+          <Navbar />
 
           <div className="flex justify-center items-center flex-col h-[75dvh]">
             <div className="flex flex-col justify-center items-center max-w-[800px] w-full font-inter px-4">
@@ -359,22 +348,6 @@ export function Chat() {
             </div>
           </div>
         </div>
-
-        <div className="hidden md:block mt-12 text-center text-sm text-gray-500 w-full absolute bottom-6 left-0 right-0">
-          <p>
-            Проект полностью с открытым исходным кодом. Вы можете включить
-            локальный режим или развернуть его сами{" "}
-            <a
-              href="https://github.com/bullmeza/screen.vision?tab=readme-ov-file#self-hosting"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-gray-600 transition-colors"
-            >
-              здесь
-            </a>
-            .
-          </p>
-        </div>
       </>
     );
   }
@@ -384,7 +357,7 @@ export function Chat() {
     return (
       <>
         <div className="flex justify-center items-center flex-col h-[100dvh]">
-          <Navbar githubStars={githubStars} openSettings={openSettings} />
+          <Navbar />
 
           <div className="flex flex-col justify-center items-center max-w-[800px] w-full font-inter">
             <SafariSettingsGuide onComplete={handleSafariSettingsComplete} />
@@ -396,12 +369,7 @@ export function Chat() {
 
   return (
     <>
-      <Navbar
-        githubStars={githubStars}
-        openSettings={openSettings}
-        showLocalMode={false}
-        grayMode={true}
-      />
+      <Navbar />
 
       <MinimalTaskScreen goal={goal} onFeedbackSubmit={trackFeedbackSubmit} />
     </>
