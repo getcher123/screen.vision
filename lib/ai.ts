@@ -439,13 +439,25 @@ export const createCoordinateSnapshot = async (
   const cursorY = imageY - cropY - 5;
 
   const cursorImg = new Image();
-  cursorImg.src = "/cursor.png";
+  // Use a relative path so it works on GitHub Pages with `basePath` (e.g. `/screen.vision/`).
+  // Also resolve on error/timeout so we never hang if the asset can't be loaded.
+  cursorImg.src = "cursor.png";
   await new Promise<void>((resolve) => {
-    cursorImg.onload = () => resolve();
+    const timeout = window.setTimeout(resolve, 2000);
+    cursorImg.onload = () => {
+      window.clearTimeout(timeout);
+      resolve();
+    };
+    cursorImg.onerror = () => {
+      window.clearTimeout(timeout);
+      resolve();
+    };
   });
 
   const cursorSize = 50;
-  ctx.drawImage(cursorImg, cursorX, cursorY, cursorSize, cursorSize);
+  if (cursorImg.naturalWidth > 0) {
+    ctx.drawImage(cursorImg, cursorX, cursorY, cursorSize, cursorSize);
+  }
 
   return canvas.toDataURL("image/png");
 };
