@@ -205,7 +205,7 @@ docker build -t screen-vision-backend .
 Run:
 
 ```bash
-docker run --rm -p 8000:8000 \
+docker run --rm -p 8000:80 \
   -e OPENAI_API_KEY=sk-... \
   -e DEEPINFRA_KEY=... \
   screen-vision-backend
