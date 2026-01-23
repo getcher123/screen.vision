@@ -16,9 +16,13 @@ from .utils.stream import stream_text
 from .utils.gemini import convert_openai_to_gemini, stream_gemini
 
 
-# Monkeypatch ThinkingConfig to allow extra fields like thinking_level
-types.ThinkingConfig.model_config["extra"] = "allow"
-types.ThinkingConfig.model_rebuild(force=True)
+# Monkeypatch ThinkingConfig to allow extra fields like thinking_level.
+# Some environments may have different google-genai versions; don't fail app startup.
+try:
+    types.ThinkingConfig.model_config["extra"] = "allow"
+    types.ThinkingConfig.model_rebuild(force=True)
+except Exception:
+    pass
 
 
 load_dotenv(".env.local")
@@ -59,6 +63,16 @@ def _required_env(name: str) -> str:
     if value.startswith("="):
         value = value.lstrip("=")
     return value
+
+
+@app.get("/")
+async def root():
+    return {"status": "ok"}
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 
 @app.post("/api/step")

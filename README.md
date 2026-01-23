@@ -115,6 +115,25 @@ This runs:
 
 Open your browser to `http://localhost:3000` and you're good to go.
 
+### Start/Stop scripts
+
+Use the helper scripts to build and run the frontend + backend (production build) or stop them:
+
+```bash
+make start
+make stop
+```
+
+Build only:
+
+```bash
+make build
+```
+
+Logs:
+- Frontend: `/tmp/screenvision-frontend.log`
+- Backend: `/tmp/screenvision-backend.log`
+
 ## Running on WSL (Windows)
 
 WSL builds can fail in `/mnt/c` due to filesystem permissions. Run the project from your Linux home directory for best results.
