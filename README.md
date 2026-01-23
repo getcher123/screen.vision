@@ -173,9 +173,12 @@ Setup:
 - Enable Pages: repo Settings → Pages → Source: GitHub Actions.
 
 Frontend env vars (GitHub → Settings → Secrets and variables → Actions → Variables):
-- `NEXT_PUBLIC_API_URL` (required for production) — URL вашего API, например `https://api.example.com/api`
+- `NEXT_PUBLIC_API_URL` (required for GitHub Pages) — URL вашего API, например `https://rag-app-getcher.waw0.amvera.tech/api`  
+  (если не задано, фронт будет пытаться обращаться к `http://127.0.0.1:8000/api` и “ответ не придёт”)
 - `NEXT_PUBLIC_BASE_PATH` (optional) — базовый путь для Pages (по умолчанию `/<repo>`)
 - `NEXT_PUBLIC_POSTHOG_KEY` (optional) — ключ PostHog для аналитики
+
+Workflow читает значения из GitHub **Variables**, но также поддерживает **Secrets** как fallback.
 
 ### Running in Production
 

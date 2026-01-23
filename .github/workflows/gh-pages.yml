@@ -19,8 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAGES: "true"
-      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
-      NEXT_PUBLIC_BASE_PATH: ${{ vars.NEXT_PUBLIC_BASE_PATH }}
+      # Prefer repo Variables, but allow Secrets as fallback.
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || secrets.NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_BASE_PATH: ${{ vars.NEXT_PUBLIC_BASE_PATH || secrets.NEXT_PUBLIC_BASE_PATH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,6 +39,14 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Validate required env
+        run: |
+          if [ -z "${NEXT_PUBLIC_API_URL}" ]; then
+            echo "NEXT_PUBLIC_API_URL is required for GitHub Pages builds."
+            echo "Example: https://rag-app-getcher.waw0.amvera.tech/api"
+            exit 1
+          fi
 
       - name: Build
         run: pnpm build
